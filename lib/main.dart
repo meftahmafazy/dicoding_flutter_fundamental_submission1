@@ -34,25 +34,22 @@ class HomePage extends StatelessWidget {
               future: DefaultAssetBundle.of(context)
                   .loadString('assets/local_restaurant.json'),
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final List<Restaurant> restaurant =
-                      parseRestaurants(snapshot.data!);
-                  print(snapshot.data);
-                  return ListView.builder(
-                      itemCount: restaurant.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                            child: Column(
-                          children: [
-                            _buildRestoItem(context, restaurant[index])
-                          ],
-                        ));
-                      });
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+                // if (snapshot.hasData) {
+                final List<Restaurant> restaurant =
+                    parseRestaurants(snapshot.data);
+                return ListView.builder(
+                    itemCount: restaurant.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                          child: Column(
+                        children: [_buildRestoItem(context, restaurant[index])],
+                      ));
+                    });
+                // } else {
+                //   return Center(
+                //     child: CircularProgressIndicator(),
+                //   );
+                // }
               }),
         ));
   }
@@ -61,12 +58,14 @@ class HomePage extends StatelessWidget {
     return ListTile(
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      leading: Image.network(
-        restaurant.pictureId,
-        width: 100,
+      leading: Hero(
+        tag: restaurant.pictureId,
+        child: Image.network(
+          restaurant.pictureId,
+          width: 100,
+        ),
       ),
-      title: Text(restaurant.name),
-      subtitle: Text(restaurant.city),
+      subtitle: Column(),
     );
   }
 }

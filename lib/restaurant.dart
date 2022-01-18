@@ -104,9 +104,12 @@ List<Restaurant> parseRestaurants(String? json) {
   }
 
   print(jsonDecode(json)['restaurants']);
-  final List<Restaurant> restaurants =
-      Welcome.fromJson(jsonDecode(json)).restaurants;
-  return restaurants;
+  final List parsed = jsonDecode(json);
+  return parsed.map((json) => Restaurant.fromJson(json)).toList();
+  // final List<Restaurant> restaurants =
+  //     Welcome.fromJson(jsonDecode(json)).restaurants;
+  //
+  // return restaurants;
 }
 
 // class Restaurant {
