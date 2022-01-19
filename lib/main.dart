@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant1_app/restaurant.dart';
+import 'package:restaurant1_app/Restaurant.dart';
+import 'package:restaurant1_app/detail_page.dart';
+import 'package:restaurant1_app/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,11 +13,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      home: SplashScreen(),
+      debugShowCheckedModeBanner: false,
       initialRoute: HomePage.routeName,
-      routes: {HomePage.routeName: (Context) => HomePage()},
+      routes: {
+        SplashScreen.routeName: (context) => SplashScreen(),
+        HomePage.routeName: (context) => HomePage(),
+        DetailPage.routeName: (context) => DetailPage(
+              restaurant:
+                  ModalRoute.of(context)?.settings.arguments as Restaurant,
+            )
+      },
     );
   }
 }
@@ -28,6 +36,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Restaurant App'),
+          backgroundColor: Color(0XFF00CCCC),
         ),
         body: Container(
           child: FutureBuilder<String>(
@@ -41,15 +50,10 @@ class HomePage extends StatelessWidget {
                     itemCount: restaurant.length,
                     itemBuilder: (context, index) {
                       return Container(
-                          child: Column(
-                        children: [_buildRestoItem(context, restaurant[index])],
-                      ));
+                          child: Column(children: [
+                        _buildRestoItem(context, restaurant[index]),
+                      ]));
                     });
-                // } else {
-                //   return Center(
-                //     child: CircularProgressIndicator(),
-                //   );
-                // }
               }),
         ));
   }
@@ -65,7 +69,33 @@ class HomePage extends StatelessWidget {
           width: 100,
         ),
       ),
-      subtitle: Column(),
+      subtitle: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                restaurant.name,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              Text(
+                restaurant.city,
+                style: TextStyle(fontSize: 15),
+              )
+            ],
+          ),
+          Row(
+            children: [Text(restaurant.rating.toString())],
+          )
+        ],
+      ),
+      onTap: () {
+        Navigator.pushNamed(context, DetailPage.routeName,
+            arguments: restaurant);
+      },
     );
   }
 }
